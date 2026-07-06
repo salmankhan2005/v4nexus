@@ -5,6 +5,7 @@ import Navbar from "@/components/nav/Navbar";
 import Footer from "@/components/footer/Footer";
 import MotionProvider from "@/components/providers/MotionProvider";
 import SplashScreen from "@/components/ui/SplashScreen";
+import WhatsAppFAB from "@/components/ui/WhatsAppFAB";
 
 const displayFont = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -48,6 +49,7 @@ export default function RootLayout({
     <html lang="en" className={`${displayFont.variable} ${bodyFont.variable} ${monoFont.variable}`}>
       <body className="font-body bg-bg-base text-text-primary antialiased">
         <SplashScreen />
+        <WhatsAppFAB />
         <MotionProvider>
           <Navbar />
           <main>{children}</main>

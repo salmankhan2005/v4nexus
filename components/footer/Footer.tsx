@@ -15,8 +15,8 @@ const LINKS = {
     { label: "Dribbble", href: "#" },
   ],
   Contact: [
-    { label: "V4nexustech@gmail.com", href: "mailto:V4nexustech@gmail.com" },
-    { label: "+91 8428267001", href: "tel:+918428267001" },
+    { label: "v4nexustech@gmail.com", href: "mailto:v4nexustech@gmail.com" },
+    { label: "+91 8428687001", href: "tel:+918428687001" },
   ],
 };
 

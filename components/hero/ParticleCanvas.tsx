@@ -81,12 +81,14 @@ export default function ParticleCanvas() {
 
       const getTarget = (index: number, shape: string) => {
         if (shape === "sphere") {
+          const aspect = camera.aspect;
+          const radius = aspect < 0.8 ? 1.5 : (aspect < 1.2 ? 2.2 : 2.8);
           const phi   = Math.acos(-1 + (2 * index) / count);
           const theta = Math.sqrt(count * Math.PI) * phi;
           return new THREE.Vector3(
-            2.8 * Math.cos(theta) * Math.sin(phi),
-            2.8 * Math.sin(theta) * Math.sin(phi),
-            2.8 * Math.cos(phi),
+            radius * Math.cos(theta) * Math.sin(phi),
+            radius * Math.sin(theta) * Math.sin(phi),
+            radius * Math.cos(phi),
           );
         } else if (shape === "cube") {
           return new THREE.Vector3(

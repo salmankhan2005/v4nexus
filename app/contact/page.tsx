@@ -30,7 +30,7 @@ export default function ContactPage() {
       `Message:\n${form.message}`
     );
     
-    window.location.href = `mailto:V4nexustech@gmail.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:v4nexustech@gmail.com?subject=${subject}&body=${body}`;
     
     setSent(true);
   };
@@ -63,7 +63,7 @@ export default function ContactPage() {
                   <p className="font-display font-bold text-text-primary mb-1">Book a 30-min call</p>
                   <p className="label-mono">Speak directly with our team</p>
                 </div>
-                <MagneticButton href="tel:+918428267001" variant="coral">
+                <MagneticButton href="tel:+918428687001" variant="coral">
                   Book a Call
                 </MagneticButton>
               </div>
@@ -72,8 +72,8 @@ export default function ContactPage() {
             {/* Direct contact */}
             <ScrollReveal delay={0.15} className="mt-8 flex gap-6">
               {[
-                { label: "Phone", value: "+91 8428267001", href: "tel:+918428267001" },
-                { label: "Email", value: "V4nexustech@gmail.com", href: "mailto:V4nexustech@gmail.com" },
+                { label: "Phone", value: "+91 8428687001", href: "tel:+918428687001" },
+                { label: "Email", value: "v4nexustech@gmail.com", href: "mailto:v4nexustech@gmail.com" },
                 { label: "Twitter", value: "@v4nexus", href: "https://twitter.com/v4nexus" },
               ].map(({ label, value, href }) => (
                 <div key={label}>

@@ -134,9 +134,10 @@ export default function SplashScreen() {
       
       const width = container.clientWidth || window.innerWidth;
       const height = container.clientHeight || window.innerHeight;
+      const aspect = width / height;
 
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+      const camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
       const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       renderer.setSize(width, height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -169,8 +170,8 @@ export default function SplashScreen() {
         // Target positions (logo)
         if (validPoints.length > 0) {
           const pt = validPoints[Math.floor(Math.random() * validPoints.length)];
-          // Scale down the logo coordinates slightly to fit well
-          const scale = 2.0; 
+          // Dynamic scale: 1.0 for mobile, 1.5 for tablets, 2.0 for desktop
+          const scale = aspect < 0.8 ? 1.0 : (aspect < 1.2 ? 1.5 : 2.0); 
           logoPositions[i * 3] = pt.x * scale;
           logoPositions[i * 3 + 1] = pt.y * scale;
           logoPositions[i * 3 + 2] = (Math.random() - 0.5) * 0.2; // slight depth
@@ -298,6 +299,26 @@ export default function SplashScreen() {
       };
 
       rafId = requestAnimationFrame(animate);
+
+      // --- Resize Handler ---
+      const onResize = () => {
+        const w = container.clientWidth || window.innerWidth;
+        const h = container.clientHeight || window.innerHeight;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      };
+      window.addEventListener("resize", onResize);
+
+      // --- Cleanup ---
+      return () => {
+        cancelAnimationFrame(rafId);
+        window.removeEventListener("resize", onResize);
+        renderer.dispose();
+        if (container.contains(renderer.domElement)) {
+          container.removeChild(renderer.domElement);
+        }
+      };
     }
 
     return () => {
