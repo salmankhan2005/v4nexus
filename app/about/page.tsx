@@ -3,19 +3,13 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 import MagneticButton from "@/components/ui/MagneticButton";
 import LottieClient from "@/components/ui/LottieClient";
 import businessIllusAnim from "@/components/animations/business_illus.json";
-import financeAnim from "@/components/animations/finance.json";
 
 export const metadata: Metadata = {
   title: "About — V4 Nexus",
   description: "A focused dev studio that ships. Meet the team, the story, and the milestones.",
 };
 
-const TEAM = [
-  { initials: "[TM]", name: "[TEAM MEMBER]", role: "Founder & Lead Engineer", skill: "Next.js · System Architecture" },
-  { initials: "[TM]", name: "[TEAM MEMBER]", role: "Mobile Engineer",          skill: "React Native · Expo" },
-  { initials: "[TM]", name: "[TEAM MEMBER]", role: "Product Designer",         skill: "Figma · Design Systems" },
-  { initials: "[TM]", name: "[TEAM MEMBER]", role: "Backend Engineer",         skill: "Node.js · PostgreSQL" },
-];
+
 
 const MILESTONES = [
   { year: "2020", event: "Studio founded — first SaaS shipped in 6 weeks." },
@@ -52,39 +46,7 @@ export default function AboutPage() {
 
         <div className="section-divider mb-20" />
 
-        {/* Team */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-          <ScrollReveal>
-            <p className="label-mono-accent mb-3">// the team</p>
-            <h2 className="font-display font-bold text-3xl lg:text-4xl text-text-primary">People who ship.</h2>
-          </ScrollReveal>
-          <div className="w-32 md:w-48 lg:w-56 opacity-80 mix-blend-screen -mb-4 hidden md:block">
-            <LottieClient animationData={financeAnim} />
-          </div>
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-24">
-          {TEAM.map((member, i) => (
-            <ScrollReveal key={i} delay={i * 0.08}>
-              <div className="surface-card surface-card-hover p-6 group cursor-default">
-                {/* Avatar */}
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-accent-violet/30 to-accent-cyan/20 flex items-center justify-center mb-5 font-mono text-sm text-text-muted">
-                  {member.initials}
-                </div>
-                <h3 className="font-display font-bold text-text-primary mb-1">{member.name}</h3>
-                <p className="font-body text-text-muted text-sm mb-3">{member.role}</p>
-                <span
-                  className="font-mono text-[9px] tracking-wider uppercase px-2 py-1 rounded"
-                  style={{ background: "rgba(108,92,224,0.12)", color: "#6C5CE0" }}
-                >
-                  {member.skill}
-                </span>
-              </div>
-            </ScrollReveal>
-          ))}
-        </div>
-
-        <div className="section-divider mb-20" />
 
         {/* Timeline */}
         <ScrollReveal>
