@@ -1,7 +1,8 @@
 "use client";
 import ScrollReveal from "@/components/ui/ScrollReveal";
-
+import RevealText from "@/components/ui/RevealText";
 import LottieClient from "@/components/ui/LottieClient";
+import { motion } from "framer-motion";
 import businessPlanAnim from "@/components/animations/business_plan.json";
 
 const STEPS = [
@@ -29,41 +30,49 @@ const STEPS = [
 
 export default function ProcessSteps() {
   return (
-    <section className="py-28 px-6 lg:px-8 max-w-7xl mx-auto">
+    <section className="mx-auto max-w-7xl px-6 py-28 lg:px-8">
       <div className="section-divider mb-20" />
 
-      <ScrollReveal>
-        <div className="flex flex-col lg:flex-row items-center justify-between mb-16 gap-8">
-          <div>
-            <p className="label-mono-accent mb-3">// our process</p>
-            <h2 className="font-display font-bold text-4xl lg:text-5xl text-text-primary max-w-md leading-tight">
-              Predictable<br />from day one.
-            </h2>
-          </div>
-          <div className="w-48 h-48 lg:w-64 lg:h-64 opacity-80 mix-blend-screen hidden lg:block">
-            <LottieClient animationData={businessPlanAnim} />
-          </div>
+      <div className="mb-16 flex flex-col items-center justify-between gap-8 lg:flex-row">
+        <div>
+          <p className="label-mono-accent mb-4">// how we work</p>
+          <RevealText
+            as="h2"
+            text="Predictable from day one."
+            emphasis={{ "day": "iris", "one": "iris" }}
+            className="display-xl block max-w-md text-text-primary"
+          />
         </div>
-      </ScrollReveal>
+        <div className="hidden h-48 w-48 opacity-80 mix-blend-screen lg:block lg:h-60 lg:w-60">
+          <LottieClient animationData={businessPlanAnim} />
+        </div>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         {STEPS.map((step, i) => (
           <ScrollReveal key={step.num} delay={i * 0.1} direction="up">
-            <div className="relative flex flex-col gap-5 p-6 surface-card surface-card-hover h-full group cursor-default">
-              {/* Connector line */}
+            <motion.div
+              whileHover={{ y: -5 }}
+              transition={{ type: "spring", stiffness: 300, damping: 24 }}
+              data-cursor
+              className="surface-card group relative flex h-full flex-col gap-5 p-6"
+            >
               {i < STEPS.length - 1 && (
-                <div className="hidden lg:block absolute top-9 left-full w-6 h-px bg-gradient-to-r from-accent-violet to-transparent z-10" />
+                <div className="absolute left-full top-9 z-10 hidden h-px w-6 bg-gradient-to-r from-accent-violet to-transparent lg:block" />
               )}
 
-              <span className="font-mono font-medium text-5xl text-accent-violet/20 leading-none select-none">
-                {step.num}
-              </span>
+              <div className="flex items-baseline justify-between">
+                <span className="select-none font-display text-5xl font-bold leading-none text-accent-violet/25">
+                  {step.num}
+                </span>
+                <span className="live-dot opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              </div>
 
               <div>
-                <h3 className="font-display font-bold text-xl text-text-primary mb-2">{step.title}</h3>
-                <p className="font-body text-text-muted text-sm leading-relaxed">{step.desc}</p>
+                <h3 className="mb-2 font-display text-xl font-bold text-text-primary">{step.title}</h3>
+                <p className="font-body text-sm leading-relaxed text-text-muted">{step.desc}</p>
               </div>
-            </div>
+            </motion.div>
           </ScrollReveal>
         ))}
       </div>

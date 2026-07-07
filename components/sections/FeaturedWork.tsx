@@ -1,119 +1,140 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { motion, useScroll, useTransform } from "framer-motion";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import RevealText from "@/components/ui/RevealText";
 import MagneticButton from "@/components/ui/MagneticButton";
 
 const PROJECTS = [
   {
     id: 1,
-    name: "AI RESUME BUILDER",
+    name: "AI Resume Builder",
     category: "AI / WEB",
     stack: ["REACT", "AI", "VERCEL"],
-    result: "Reduces resume creation time from hours to minutes through AI-assisted content suggestions.",
+    result: "Cuts resume creation from hours to minutes with AI-assisted content suggestions.",
     image: "/images/ai_resume_builder.png",
     link: "https://remix-of-ai-resume-spark-main.vercel.app",
-    tagColor: "text-[#43f0d2] bg-[#43f0d2]/10 border-[#43f0d2]/20",
   },
   {
     id: 2,
-    name: "DEEPAM ENGINEERING",
+    name: "Deepam Engineering",
     category: "MANUFACTURING",
     stack: ["WEB", "DESIGN"],
-    result: "Premium Container & Lorry Cabin Manufacturing in Tamil Nadu.",
+    result: "Premium container & lorry-cabin manufacturing brought online for Tamil Nadu.",
     image: "/images/deepam_engineering.png",
     link: "https://share.google/b6IxHxCEeg2Fj3FBf",
-    tagColor: "text-[#c7bfff] bg-[#c7bfff]/10 border-[#c7bfff]/20",
   },
   {
     id: 3,
-    name: "AI COURSE GENERATOR",
+    name: "AI Course Generator",
     category: "ED-TECH",
     stack: ["REACT", "AI", "VERCEL"],
-    result: "Streamlines course creation for educators by automating content structuring.",
+    result: "Automates course structuring so educators publish in a fraction of the time.",
     image: "/images/ai_course_generator.png",
     link: "https://project-six-delta-36.vercel.app",
-    tagColor: "text-[#43f0d2] bg-[#43f0d2]/10 border-[#43f0d2]/20",
   },
 ];
 
-export default function FeaturedWork() {
-  const [hovered, setHovered] = useState<number | null>(null);
+function ProjectCard({ project, index }: { project: (typeof PROJECTS)[0]; index: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = useState(false);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
 
   return (
-    <section className="py-28 px-6 lg:px-8 max-w-7xl mx-auto">
-      <ScrollReveal className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-14">
-        <div>
-          <p className="font-mono text-[11px] tracking-[0.15em] uppercase text-accent-cyan mb-3">// selected work</p>
-          <h2 className="font-display font-bold text-4xl lg:text-5xl text-text-primary leading-tight">
-            Real results,<br />
-            <span className="bg-gradient-to-r from-accent-violet to-accent-cyan bg-clip-text text-transparent">
-              real clients.
-            </span>
-          </h2>
+    <Link
+      href={project.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block"
+      data-cursor-label="Open"
+    >
+      <div
+        ref={ref}
+        className="glass-card group relative h-[340px] overflow-hidden"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        <motion.div style={{ y }} className="absolute inset-[-8%]">
+          <Image
+            src={project.image}
+            alt={project.name}
+            fill
+            className={`object-cover transition-all duration-700 ${
+              hovered ? "scale-105 grayscale-0" : "scale-100 grayscale"
+            }`}
+            sizes="(max-width: 768px) 100vw, 33vw"
+          />
+        </motion.div>
+
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-bg-base via-bg-base/40 to-transparent opacity-90" />
+
+        <div className="absolute left-5 top-5 z-20 flex items-center gap-2">
+          <span className="live-dot" />
+          <span className="border border-white/10 bg-black/30 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-accent-cyan backdrop-blur-sm">
+            {project.category}
+          </span>
         </div>
-        <MagneticButton href="/work" variant="outline">
-          // View All Work
-        </MagneticButton>
+
+        <span className="absolute right-5 top-4 z-20 font-display text-5xl font-bold text-white/10">
+          0{index + 1}
+        </span>
+
+        <div className="absolute inset-x-5 bottom-5 z-20">
+          <h3 className="mb-2 font-display text-xl font-bold tracking-tight text-text-primary">
+            {project.name}
+          </h3>
+          <div
+            className="overflow-hidden transition-all duration-500"
+            style={{ maxHeight: hovered ? 120 : 0, opacity: hovered ? 1 : 0 }}
+          >
+            <div className="mb-2 flex flex-wrap gap-2">
+              {project.stack.map((t) => (
+                <span
+                  key={t}
+                  className="border border-white/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-text-muted"
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
+            <p className="font-body text-sm leading-relaxed text-accent-cyan">{project.result}</p>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+export default function FeaturedWork() {
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-28 lg:px-8">
+      <ScrollReveal className="mb-14 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+        <div>
+          <p className="label-mono-accent mb-4">// selected work</p>
+          <RevealText
+            as="h2"
+            text="Real results, real clients."
+            emphasis={{ "clients": "solar" }}
+            className="display-xl block text-text-primary"
+          />
+        </div>
+        <span data-cursor-label="Browse">
+          <MagneticButton href="/work" variant="outline">
+            View all work
+          </MagneticButton>
+        </span>
       </ScrollReveal>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
         {PROJECTS.map((project, i) => (
           <ScrollReveal key={project.id} delay={i * 0.1}>
-            <Link href={project.link} target="_blank" rel="noopener noreferrer" className="block">
-              <div
-                className="relative overflow-hidden cursor-pointer group glass-card h-[320px]"
-                onMouseEnter={() => setHovered(project.id)}
-                onMouseLeave={() => setHovered(null)}
-              >
-              {/* Image */}
-              <Image
-                src={project.image}
-                alt={project.name}
-                fill
-                className={`object-cover transition-all duration-700 ${
-                  hovered === project.id ? "grayscale-0 scale-100" : "grayscale scale-[1.05]"
-                }`}
-                sizes="(max-width: 768px) 100vw, 33vw"
-              />
-
-              {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#10131a] to-transparent opacity-80 z-10" />
-
-              {/* Category badge */}
-              <div className="absolute top-5 left-5 z-20">
-                <span className={`font-mono text-[10px] tracking-widest uppercase px-3 py-1 border ${project.tagColor}`}>
-                  {project.category}
-                </span>
-              </div>
-
-              {/* Bottom content */}
-              <div className="absolute bottom-5 left-5 right-5 z-20">
-                <h3 className="font-display font-bold text-xl text-[#e1e2eb] mb-2 tracking-tight">
-                  {project.name}
-                </h3>
-
-                {/* Hover reveal */}
-                <div
-                  className="transition-opacity duration-300"
-                  style={{ opacity: hovered === project.id ? 1 : 0 }}
-                >
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    {project.stack.map((tech) => (
-                      <span
-                        key={tech}
-                        className="font-mono text-[9px] tracking-wider uppercase px-2 py-0.5 border border-white/10 text-[#c8c4d6]"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                  <p className="font-body text-[#43f0d2] text-sm">{project.result}</p>
-                </div>
-              </div>
-              </div>
-            </Link>
+            <ProjectCard project={project} index={i} />
           </ScrollReveal>
         ))}
       </div>

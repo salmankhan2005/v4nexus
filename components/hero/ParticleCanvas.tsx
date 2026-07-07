@@ -42,8 +42,8 @@ export default function ParticleCanvas() {
       const colors    = new Float32Array(count * 3);
       const sizes     = new Float32Array(count);
 
-      const colorViolet = new THREE.Color(0x6C5CE0);
-      const colorCyan   = new THREE.Color(0x33E6C9);
+      const colorViolet = new THREE.Color(0x6E7BFF);
+      const colorCyan   = new THREE.Color(0xFF8A3D);
 
       for (let i = 0; i < count; i++) {
         positions[i * 3]     = (Math.random() - 0.5) * 10;

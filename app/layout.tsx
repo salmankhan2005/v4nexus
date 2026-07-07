@@ -1,16 +1,26 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Space_Grotesk, Instrument_Serif, Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/nav/Navbar";
 import Footer from "@/components/footer/Footer";
-import MotionProvider from "@/components/providers/MotionProvider";
+import PageTransition from "@/components/providers/PageTransition";
 import SplashScreen from "@/components/ui/SplashScreen";
 import WhatsAppFAB from "@/components/ui/WhatsAppFAB";
+import Cursor from "@/components/ui/Cursor";
+import ScrollProgress from "@/components/ui/ScrollProgress";
 
-const displayFont = Plus_Jakarta_Sans({
+const displayFont = Space_Grotesk({
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
+  weight: ["500", "700"],
   variable: "--font-display",
+  display: "swap",
+});
+
+const serifFont = Instrument_Serif({
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
+  variable: "--font-serif",
   display: "swap",
 });
 
@@ -46,15 +56,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${displayFont.variable} ${bodyFont.variable} ${monoFont.variable}`}>
+    <html
+      lang="en"
+      className={`${displayFont.variable} ${serifFont.variable} ${bodyFont.variable} ${monoFont.variable}`}
+    >
       <body className="font-body bg-bg-base text-text-primary antialiased">
         <SplashScreen />
+        <Cursor />
+        <ScrollProgress />
         <WhatsAppFAB />
-        <MotionProvider>
-          <Navbar />
+        <Navbar />
+        <PageTransition>
           <main>{children}</main>
           <Footer />
-        </MotionProvider>
+        </PageTransition>
       </body>
     </html>
   );

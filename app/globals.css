@@ -3,6 +3,7 @@
 @theme {
   --color-bg-base: var(--bg-base);
   --color-bg-surface: var(--bg-surface);
+  --color-bg-raised: var(--bg-raised);
   --color-accent-violet: var(--accent-violet);
   --color-accent-cyan: var(--accent-cyan);
   --color-signal-coral: var(--signal-coral);
@@ -11,20 +12,33 @@
 }
 
 /* ─────────────────────────────────────────────
-   V4 NEXUS — Design Tokens
+   V4 NEXUS — "Engineered Instrument" Design Tokens
+   Deep gunmetal ink · warm bone type · electric iris (cool)
+   + solar amber (warm) accents. Grain. Serif-italic emphasis.
 ───────────────────────────────────────────── */
 :root {
-  --bg-base:        #0B0E14;
-  --bg-surface:     #12161F;
-  --accent-violet:  #6C5CE0;
-  --accent-cyan:    #33E6C9;
-  --signal-coral:   #FF6B4A;
-  --text-primary:   #E8EAF0;
-  --text-muted:     #8B92A5;
-  --border-dim:     rgba(255,255,255,0.06);
-  --border-subtle:  rgba(255,255,255,0.10);
-  --glow-violet:    rgba(108,92,224,0.15);
-  --glow-cyan:      rgba(51,230,201,0.15);
+  /* Surfaces */
+  --bg-base:        #0A0B10;   /* deep gunmetal ink            */
+  --bg-surface:     #0E1017;   /* raised panel                 */
+  --bg-raised:      #141824;   /* card / console               */
+
+  /* Accents — names kept for compatibility, values re-tuned */
+  --accent-violet:  #6E7BFF;   /* IRIS  — cool structural accent */
+  --accent-violet-2:#4B54D6;
+  --accent-cyan:    #FF8A3D;   /* SOLAR — warm energy accent    */
+  --accent-cyan-2:  #FFB347;
+  --signal-coral:   #FF7A45;   /* CTA warm                      */
+
+  /* Type */
+  --text-primary:   #ECEAE1;   /* warm bone                     */
+  --text-muted:     #7B8290;   /* cool ash                      */
+  --text-dim:       #565C68;
+
+  /* Lines & glows */
+  --border-dim:     rgba(255,255,255,0.05);
+  --border-subtle:  rgba(255,255,255,0.09);
+  --glow-iris:      rgba(110,123,255,0.16);
+  --glow-solar:     rgba(255,138,61,0.16);
 }
 
 /* ─────────────────────────────────────────────
@@ -43,22 +57,41 @@ body {
   color: var(--text-primary);
   min-height: 100dvh;
   overflow-x: hidden;
+  position: relative;
+}
+
+/* ── Film grain — the "instrument" texture ──────────────────── */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* ─────────────────────────────────────────────
-   Selection
+   Selection & Scrollbar
 ───────────────────────────────────────────── */
 ::selection {
   background: var(--accent-violet);
-  color: #fff;
+  color: #0A0B10;
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--accent-violet), var(--accent-cyan));
+  border-radius: 3px;
 }
 
 /* ─────────────────────────────────────────────
-   Scrollbar
+   Custom Cursor (desktop / fine-pointer only)
 ───────────────────────────────────────────── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--bg-base); }
-::-webkit-scrollbar-thumb { background: var(--accent-violet); border-radius: 2px; }
+@media (hover: hover) and (pointer: fine) {
+  .has-cursor, .has-cursor * { cursor: none !important; }
+}
 
 /* ─────────────────────────────────────────────
    Typography Utilities
@@ -66,136 +99,164 @@ body {
 .font-display  { font-family: var(--font-display), sans-serif; }
 .font-body     { font-family: var(--font-body), sans-serif; }
 .font-mono-ui  { font-family: var(--font-mono), monospace; }
+.font-serif    { font-family: var(--font-serif), Georgia, serif; }
+
+/* Serif-italic emphasis word inside a grotesk headline — the signature */
+.em {
+  font-family: var(--font-serif), Georgia, serif;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.01em;
+}
+.em-iris  { color: var(--accent-violet); }
+.em-solar { color: var(--accent-cyan);   }
 
 .text-gradient-vio-cyan {
-  background: linear-gradient(135deg, var(--accent-violet) 0%, var(--accent-cyan) 100%);
+  background: linear-gradient(105deg, var(--accent-violet) 0%, var(--accent-cyan) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+.text-solar { color: var(--accent-cyan); }
+.text-iris  { color: var(--accent-violet); }
+
+/* Fluid display sizing */
+.display-hero {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  font-size: clamp(2.75rem, 9vw, 8.5rem);
+}
+.display-xl {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  font-size: clamp(2.25rem, 6vw, 5rem);
 }
 
 /* ─────────────────────────────────────────────
    Surface / Card Utils
 ───────────────────────────────────────────── */
 .surface-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  background:
+    linear-gradient(160deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.01) 55%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-top-color: rgba(255,255,255,0.12);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+  border-radius: 14px;
 }
-
-.surface-card-hover {
-  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-}
+.surface-card-hover { transition: transform .55s cubic-bezier(.16,1,.3,1), border-color .4s, box-shadow .5s, background .5s; }
 .surface-card-hover:hover {
-  border-color: rgba(67, 240, 210, 0.4);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 0 32px var(--glow-violet);
-  transform: translateY(-4px);
+  border-color: rgba(110,123,255,0.4);
+  background: linear-gradient(160deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.015) 55%);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.14), 0 0 40px var(--glow-iris);
+  transform: translateY(-5px);
 }
 
-/* ─────────────────────────────────────────────
-   Glow Accents
-───────────────────────────────────────────── */
-.glow-violet { box-shadow: 0 0 40px var(--glow-violet); }
-.glow-cyan   { box-shadow: 0 0 40px var(--glow-cyan); }
-
-/* ─────────────────────────────────────────────
-   Gradient Mesh Background (Bento Cards)
-───────────────────────────────────────────── */
-.gradient-mesh {
-  position: relative;
-  overflow: hidden;
+.glass-card {
+  background: linear-gradient(160deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 60%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-top-color: rgba(255,255,255,0.13);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08);
+  border-radius: 14px;
+  transition: transform .55s cubic-bezier(.16,1,.3,1), border-color .4s, box-shadow .5s;
 }
+.glass-card:hover {
+  border-color: rgba(255,138,61,0.4);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.16), 0 0 44px var(--glow-solar);
+  transform: translateY(-5px);
+}
+
+.glow-violet { box-shadow: 0 0 44px var(--glow-iris); }
+.glow-cyan   { box-shadow: 0 0 44px var(--glow-solar); }
+
+/* ── Gradient mesh behind bento cards ─────────────────────── */
+.gradient-mesh { position: relative; overflow: hidden; }
 .gradient-mesh::before {
   content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background:
-    radial-gradient(ellipse at 0% 0%, rgba(108,92,224,0.12) 0%, transparent 60%),
-    radial-gradient(ellipse at 100% 100%, rgba(51,230,201,0.08) 0%, transparent 60%);
-  pointer-events: none;
+    radial-gradient(ellipse at 0% 0%,   rgba(110,123,255,0.14) 0%, transparent 58%),
+    radial-gradient(ellipse at 100% 100%, rgba(255,138,61,0.10) 0%, transparent 58%);
+}
+
+/* ── Hairline engineering grid overlay ─────────────────────── */
+.blueprint-grid {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 64px 64px;
 }
 
 /* ─────────────────────────────────────────────
-   Mono Label
+   Mono Labels
 ───────────────────────────────────────────── */
-.label-mono {
+.label-mono, .label-mono-accent {
   font-family: var(--font-mono), monospace;
   font-size: 0.7rem;
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--text-muted);
 }
+.label-mono        { color: var(--text-muted); }
+.label-mono-accent { color: var(--accent-cyan); }
 
-.label-mono-accent {
-  font-family: var(--font-mono), monospace;
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent-cyan);
+/* ── Live status dot ───────────────────────────────────────── */
+.live-dot {
+  width: 6px; height: 6px; border-radius: 999px;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 0 0 rgba(255,138,61,0.6);
+  animation: livePulse 2s infinite;
+}
+@keyframes livePulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255,138,61,0.55); }
+  70%  { box-shadow: 0 0 0 7px rgba(255,138,61,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,138,61,0); }
 }
 
 /* ─────────────────────────────────────────────
    Section Divider
 ───────────────────────────────────────────── */
 .section-divider {
-  width: 100%;
-  height: 1px;
+  width: 100%; height: 1px;
   background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
 }
+
+/* ── Reveal mask helper (overflow clip for line reveals) ───── */
+.reveal-mask { overflow: hidden; display: block; }
 
 /* ─────────────────────────────────────────────
    Marquee
 ───────────────────────────────────────────── */
-.glass-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.01) 100%);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.12);
-  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.glass-card:hover {
-  border-color: rgba(67, 240, 210, 0.4);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.02) 100%);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 0 40px rgba(67, 240, 210, 0.2);
-  transform: translateY(-4px);
-}
-
-/* ─────────────────────────────────────────────
 @keyframes marquee {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
+.marquee-track { display: flex; width: max-content; animation: marquee 32s linear infinite; }
+.marquee-track:hover { animation-play-state: paused; }
 
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 28s linear infinite;
+/* Kinetic ticker (larger, for section band) */
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-33.333%); }
 }
-
-.marquee-track:hover {
-  animation-play-state: paused;
-}
+.ticker-track { display: flex; width: max-content; animation: ticker 40s linear infinite; }
 
 /* ─────────────────────────────────────────────
    Reduced Motion
 ───────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  .marquee-track, .ticker-track { animation: none !important; }
 }

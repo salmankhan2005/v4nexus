@@ -78,9 +78,9 @@ void main() {
     vec2 uv = v_texCoord;
     vec2 mouse = u_mouse / u_resolution;
 
-    vec3 bgBase       = vec3(0.043, 0.055, 0.078); // #0B0E14
-    vec3 accentViolet = vec3(0.424, 0.361, 0.878); // #6C5CE0
-    vec3 accentCyan   = vec3(0.2,   0.902, 0.788); // #33E6C9
+    vec3 bgBase       = vec3(0.039, 0.043, 0.063); // #0A0B10 ink
+    vec3 accentViolet = vec3(0.431, 0.482, 1.000); // #6E7BFF iris
+    vec3 accentCyan   = vec3(1.000, 0.541, 0.239); // #FF8A3D solar
 
     float n  = snoise(uv * 3.0 + u_time * 0.1);
     float n2 = snoise(uv * 6.0 - u_time * 0.05);
@@ -90,8 +90,8 @@ void main() {
 
     vec3 color = bgBase;
     float wave = sin(uv.x * 10.0 + u_time * 0.5) * 0.5 + 0.5;
-    color = mix(color, accentViolet, wave * 0.05);
-    color = mix(color, accentCyan,   n * 0.03 + interact);
+    color = mix(color, accentViolet, wave * 0.07);
+    color = mix(color, accentCyan,   n * 0.035 + interact);
 
     float grain = fract(sin(dot(uv, vec2(12.9898, 78.233))) * 43758.5453);
     color += (grain - 0.5) * 0.02;

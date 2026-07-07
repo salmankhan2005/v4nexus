@@ -69,7 +69,6 @@ export default function SplashScreen() {
 
     // Load Image for Pixel Sampling
     const img = new window.Image();
-    img.src = '/logo.png';
     let validPoints: {x: number, y: number}[] = [];
     
     img.onload = () => {
@@ -107,6 +106,8 @@ export default function SplashScreen() {
     
     // In case image fails to load, proceed without logo particles
     img.onerror = loadThreeJS;
+
+    img.src = '/logo.png';
 
     function loadThreeJS() {
       // @ts-expect-error THREE is loaded globally from CDN
@@ -150,8 +151,8 @@ export default function SplashScreen() {
       const colors = new Float32Array(count * 3);
       const sizes = new Float32Array(count);
 
-      const colorViolet = new THREE.Color(0x6C5CE0);
-      const colorCyan = new THREE.Color(0x33E6C9);
+      const colorViolet = new THREE.Color(0x6E7BFF);
+      const colorCyan = new THREE.Color(0xFF8A3D);
 
       for (let i = 0; i < count; i++) {
         // Initial random positions (drifting)

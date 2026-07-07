@@ -9,18 +9,20 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        "bg-base":      "#0B0E14",
-        "bg-surface":   "#12161F",
-        "accent-violet":"#6C5CE0",
-        "accent-cyan":  "#33E6C9",
-        "signal-coral": "#FF6B4A",
-        "text-primary": "#E8EAF0",
-        "text-muted":   "#8B92A5",
+        "bg-base":      "#0A0B10",
+        "bg-surface":   "#0E1017",
+        "bg-raised":    "#141824",
+        "accent-violet":"#6E7BFF",
+        "accent-cyan":  "#FF8A3D",
+        "signal-coral": "#FF7A45",
+        "text-primary": "#ECEAE1",
+        "text-muted":   "#7B8290",
       },
       fontFamily: {
         display: ["var(--font-display)", "sans-serif"],
         body:    ["var(--font-body)",    "sans-serif"],
         mono:    ["var(--font-mono)",    "monospace"],
+        serif:   ["var(--font-serif)",   "Georgia", "serif"],
       },
       borderRadius: {
         "2xl": "1rem",
@@ -46,7 +48,7 @@ const config: Config = {
         },
       },
       backgroundImage: {
-        "gradient-vio-cyan": "linear-gradient(135deg, #6C5CE0 0%, #33E6C9 100%)",
+        "gradient-vio-cyan": "linear-gradient(105deg, #6E7BFF 0%, #FF8A3D 100%)",
         "gradient-radial":   "radial-gradient(var(--tw-gradient-stops))",
       },
     },

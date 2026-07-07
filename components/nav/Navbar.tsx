@@ -23,80 +23,97 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => { setMenuOpen(false); }, [pathname]);
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "backdrop-blur-2xl bg-bg-base/60 border-b border-white/[0.08]" : ""
-          }`}
+        className={`fixed inset-x-0 top-0 z-[60] transition-all duration-500 ${
+          scrolled ? "border-b border-white/[0.08] bg-bg-base/60 backdrop-blur-2xl" : ""
+        }`}
       >
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <span className="font-display font-bold text-xl text-text-primary tracking-tight">
-              V4<span className="text-gradient-vio-cyan">NEXUS</span>
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
+          <Link href="/" className="group flex items-center gap-2.5" data-cursor-label="Home">
+            <span className="relative flex h-6 w-6 items-center justify-center">
+              <span className="absolute inset-0 rounded-[5px] bg-gradient-to-br from-accent-violet to-accent-cyan opacity-90 transition-transform duration-500 group-hover:rotate-90" />
+              <span className="relative font-mono text-[11px] font-bold text-bg-base">V4</span>
+            </span>
+            <span className="font-display text-lg font-bold tracking-tight text-text-primary">
+              NEXUS
             </span>
           </Link>
 
-          {/* Desktop Links */}
-          <ul className="hidden md:flex items-center gap-8">
-            {NAV_LINKS.map(({ label, href }) => (
-              <li key={href}>
-                <Link
-                  href={href}
-                  className={`font-mono text-[11px] tracking-[0.12em] uppercase transition-colors duration-200 ${pathname === href
-                      ? "text-accent-cyan"
-                      : "text-text-muted hover:text-text-primary"
+          <ul className="hidden items-center gap-8 md:flex">
+            {NAV_LINKS.map(({ label, href }) => {
+              const active = pathname === href;
+              return (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    data-cursor
+                    className={`relative font-mono text-[11px] uppercase tracking-[0.14em] transition-colors duration-200 ${
+                      active ? "text-accent-cyan" : "text-text-muted hover:text-text-primary"
                     }`}
-                >
-                  {label}
-                </Link>
-              </li>
-            ))}
+                  >
+                    {label}
+                    {active && (
+                      <motion.span
+                        layoutId="nav-active"
+                        className="absolute -bottom-1.5 left-0 h-px w-full bg-accent-cyan"
+                      />
+                    )}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
 
-          {/* Desktop CTA */}
-          <div className="hidden md:block">
+          <div className="hidden md:block" data-cursor-label="Let's talk">
             <MagneticButton href="/contact" variant="coral">
-              Book a Call
+              Book a call
             </MagneticButton>
           </div>
 
-          {/* Mobile Hamburger */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
-            className="md:hidden flex flex-col gap-1.5 p-2"
+            className="flex flex-col gap-1.5 p-2 md:hidden"
           >
-            <span className={`block w-6 h-px bg-text-primary transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-[7px]" : ""}`} />
-            <span className={`block w-6 h-px bg-text-primary transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
-            <span className={`block w-6 h-px bg-text-primary transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-[7px]" : ""}`} />
+            <span className={`block h-px w-6 bg-text-primary transition-all duration-300 ${menuOpen ? "translate-y-[7px] rotate-45" : ""}`} />
+            <span className={`block h-px w-6 bg-text-primary transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
+            <span className={`block h-px w-6 bg-text-primary transition-all duration-300 ${menuOpen ? "-translate-y-[7px] -rotate-45" : ""}`} />
           </button>
         </div>
       </nav>
 
-      {/* Mobile Drawer */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-            className="fixed inset-0 z-40 bg-bg-base/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8 md:hidden"
+            initial={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
+            animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
+            exit={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
+            transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-8 bg-bg-base/95 backdrop-blur-xl md:hidden"
           >
-            {NAV_LINKS.map(({ label, href }) => (
-              <Link
+            {NAV_LINKS.map(({ label, href }, i) => (
+              <motion.div
                 key={href}
-                href={href}
-                className="font-display font-bold text-4xl text-text-primary hover:text-accent-cyan transition-colors"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 + i * 0.07 }}
               >
-                {label}
-              </Link>
+                <Link
+                  href={href}
+                  className="font-display text-4xl font-bold text-text-primary transition-colors hover:text-accent-cyan"
+                >
+                  {label}
+                </Link>
+              </motion.div>
             ))}
             <MagneticButton href="/contact" variant="coral">
-              Book a Call
+              Book a call
             </MagneticButton>
           </motion.div>
         )}
