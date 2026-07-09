@@ -32,9 +32,11 @@ function LiquidSphere() {
     );
   });
 
+  const segments = isMobile ? 32 : 64;
+
   return (
     <Float speed={2} rotationIntensity={0.5} floatIntensity={2}>
-      <Sphere ref={meshRef} args={[1, 64, 64]} scale={sphereScale}>
+      <Sphere ref={meshRef} args={[1, segments, segments]} scale={sphereScale}>
         <MeshDistortMaterial
           ref={materialRef}
           color="#1a1a4a"
@@ -50,7 +52,7 @@ function LiquidSphere() {
       </Sphere>
       
       {/* Surrounding floating particles */}
-      <FloatingParticles count={60} />
+      <FloatingParticles count={isMobile ? 20 : 60} />
     </Float>
   );
 }

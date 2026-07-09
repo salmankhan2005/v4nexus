@@ -289,8 +289,9 @@ function Crystal({
             <dodecahedronGeometry args={[2.8, 0]} />
             <MeshTransmissionMaterial
               backside
-              samples={4}
-              thickness={2.5}
+              samples={typeof window !== 'undefined' && window.innerWidth < 1024 ? 2 : 4}
+              resolution={typeof window !== 'undefined' && window.innerWidth < 1024 ? 128 : 256}
+              thickness={typeof window !== 'undefined' && window.innerWidth < 1024 ? 1.5 : 2.5}
               roughness={0}
               transmission={1}
               ior={1.45}
@@ -318,7 +319,7 @@ function Crystal({
       </Float>
 
       {/* Sparkle particles around the crystal */}
-      <Sparkles count={50} />
+      <Sparkles count={typeof window !== 'undefined' && window.innerWidth < 1024 ? 20 : 50} />
     </group>
   );
 }
@@ -349,10 +350,10 @@ function Scene({
       <Environment preset="night" />
 
       {/* Deep space starfield */}
-      <Starfield count={400} />
+      <Starfield count={isMobile ? 150 : 400} />
 
       {/* Small floating crystal shards */}
-      <FloatingShards count={15} />
+      <FloatingShards count={isMobile ? 8 : 15} />
 
       {/* Main crystal with project image */}
       <Crystal
