@@ -441,18 +441,20 @@ export default function WebGLGallery({ projects }: { projects: any[] }) {
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="flex items-end justify-between gap-12"
             >
-              {/* Left: Project name + CTA */}
+              {/* Left: Project name, Role + CTA */}
               <div className="flex flex-col gap-3">
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">Project</span>
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+                  {projects[activeIndex].category} <span className="mx-2 opacity-50">/</span> {projects[activeIndex].role}
+                </span>
                 <h3 className="font-display text-4xl font-bold tracking-tight text-white">
                   {projects[activeIndex].name}
                 </h3>
-                <div className="pointer-events-auto mt-2 w-max">
+                <div className="pointer-events-auto mt-4 w-max">
                   <Link
                     href={projects[activeIndex].link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-3 rounded-full border border-indigo-400/40 bg-indigo-500/10 px-5 py-2.5 font-mono text-[11px] uppercase tracking-widest text-indigo-300 transition-all hover:border-indigo-400 hover:bg-indigo-500/20"
+                    className="group inline-flex items-center gap-3 rounded-full border border-indigo-400/40 bg-indigo-500/10 px-6 py-3 font-mono text-[11px] uppercase tracking-widest text-indigo-300 transition-all hover:border-indigo-400 hover:bg-indigo-500/20"
                   >
                     View Case Study
                     <span className="transition-transform group-hover:translate-x-1">→</span>
@@ -460,13 +462,15 @@ export default function WebGLGallery({ projects }: { projects: any[] }) {
                 </div>
               </div>
 
-              {/* Right: Info + tags */}
-              <div className="flex max-w-md flex-col gap-3 text-right">
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">Info</span>
-                <p className="font-body text-sm leading-relaxed text-white/50">
-                  {projects[activeIndex].result}
+              {/* Right: Description, Result + tags */}
+              <div className="flex max-w-lg flex-col gap-4 text-right">
+                <p className="font-body text-sm leading-relaxed text-white/70">
+                  {projects[activeIndex].description}
                 </p>
-                <div className="flex flex-wrap justify-end gap-2">
+                <p className="font-body text-[13px] italic text-indigo-300">
+                  &ldquo;{projects[activeIndex].result}&rdquo;
+                </p>
+                <div className="flex flex-wrap justify-end gap-2 mt-2">
                   {projects[activeIndex].stack.map((t: string) => (
                     <span
                       key={t}
