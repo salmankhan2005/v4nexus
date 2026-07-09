@@ -331,8 +331,13 @@ function Scene({
   projects: any[];
   activeIndex: number;
 }) {
+  const { size } = useThree();
+  const isMobile = size.width < 1024;
+  const groupScale = isMobile ? 0.6 : 1;
+  const groupPosition = isMobile ? new THREE.Vector3(0, 1.5, 0) : new THREE.Vector3(0, 0, 0);
+
   return (
-    <>
+    <group scale={groupScale} position={groupPosition}>
       {/* Dramatic lighting */}
       <ambientLight intensity={0.1} color="#4444aa" />
       <directionalLight position={[5, 8, 5]} intensity={1.5} color="#ffffff" />
@@ -362,7 +367,7 @@ function Scene({
         dampingFactor={0.05}
         rotateSpeed={0.4}
       />
-    </>
+    </group>
   );
 }
 

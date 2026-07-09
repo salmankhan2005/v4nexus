@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, MeshDistortMaterial, Sphere, Float } from "@react-three/drei";
 import { useInView } from "framer-motion";
 import * as THREE from "three";
@@ -8,6 +8,9 @@ import * as THREE from "three";
 function LiquidSphere() {
   const meshRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<any>(null);
+  const { size } = useThree();
+  const isMobile = size.width < 1024;
+  const sphereScale = isMobile ? 1.5 : 2.5;
 
   useFrame((state) => {
     if (!meshRef.current || !materialRef.current) return;
@@ -31,7 +34,7 @@ function LiquidSphere() {
 
   return (
     <Float speed={2} rotationIntensity={0.5} floatIntensity={2}>
-      <Sphere ref={meshRef} args={[1, 64, 64]} scale={2.5}>
+      <Sphere ref={meshRef} args={[1, 64, 64]} scale={sphereScale}>
         <MeshDistortMaterial
           ref={materialRef}
           color="#1a1a4a"
