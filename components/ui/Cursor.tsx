@@ -7,7 +7,18 @@ import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motio
  * expands over interactive elements. Desktop / fine-pointer only.
  */
 export default function Cursor() {
+  const [isMounted, setIsMounted] = useState(false);
   const [enabled, setEnabled] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    if (typeof window !== "undefined") {
+      setEnabled(
+        window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
+        !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      );
+    }
+  }, []);
   const [hovering, setHovering] = useState(false);
   const [label, setLabel] = useState<string | null>(null);
   const [down, setDown] = useState(false);
@@ -19,17 +30,13 @@ export default function Cursor() {
   const ringY = useSpring(y, { stiffness: 350, damping: 32, mass: 0.6 });
 
   useEffect(() => {
-    const fine =
-      window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!fine) return;
-    setEnabled(true);
+    if (!enabled) return;
     document.body.classList.add("has-cursor");
 
     const move = (e: MouseEvent) => {
       x.set(e.clientX);
       y.set(e.clientY);
-      if (!visible) setVisible(true);
+      setVisible(true);
 
       const el = (e.target as HTMLElement)?.closest(
         "a, button, [data-cursor], input, textarea, select, label"
@@ -57,13 +64,13 @@ export default function Cursor() {
       window.removeEventListener("mouseup", up);
       document.body.classList.remove("has-cursor");
     };
-  }, [x, y, visible]);
+  }, [x, y, enabled]);
 
-  if (!enabled) return null;
+  if (!isMounted || !enabled) return null;
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-[9999] hidden md:block"
+      className="pointer-events-none fixed inset-0 z-[9999] hidden md:block mix-blend-difference"
       style={{ opacity: visible ? 1 : 0, transition: "opacity .25s" }}
     >
       {/* Lagging ring */}
@@ -73,13 +80,13 @@ export default function Cursor() {
       >
         <motion.div
           animate={{
-            width: hovering ? 56 : 30,
-            height: hovering ? 56 : 30,
-            borderColor: hovering ? "rgba(255,138,61,0.9)" : "rgba(110,123,255,0.6)",
-            backgroundColor: hovering ? "rgba(255,138,61,0.08)" : "rgba(110,123,255,0)",
+            width: hovering ? 64 : 36,
+            height: hovering ? 64 : 36,
+            borderColor: hovering ? "rgba(255,255,255,1)" : "rgba(255,255,255,0.5)",
+            backgroundColor: hovering ? "rgba(255,255,255,1)" : "rgba(255,255,255,0)",
           }}
           transition={{ type: "spring", stiffness: 300, damping: 22 }}
-          className="-translate-x-1/2 -translate-y-1/2 rounded-full border"
+          className="-translate-x-1/2 -translate-y-1/2 rounded-full border-2"
           style={{ scale: down ? 0.82 : 1 }}
         >
           <AnimatePresence>
@@ -88,7 +95,7 @@ export default function Cursor() {
                 initial={{ opacity: 0, scale: 0.6 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.6 }}
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap font-mono text-[9px] uppercase tracking-widest text-signal-coral"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap font-mono text-[10px] font-bold uppercase tracking-widest text-black"
               >
                 {label}
               </motion.span>
@@ -103,10 +110,10 @@ export default function Cursor() {
         className="absolute top-0 left-0"
       >
         <div
-          className="-translate-x-1/2 -translate-y-1/2 rounded-full bg-text-primary transition-transform"
+          className="-translate-x-1/2 -translate-y-1/2 rounded-full bg-white transition-transform"
           style={{
-            width: 5,
-            height: 5,
+            width: 8,
+            height: 8,
             transform: `translate(-50%,-50%) scale(${hovering ? 0 : 1})`,
           }}
         />

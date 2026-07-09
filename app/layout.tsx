@@ -8,6 +8,7 @@ import SplashScreen from "@/components/ui/SplashScreen";
 import WhatsAppFAB from "@/components/ui/WhatsAppFAB";
 import Cursor from "@/components/ui/Cursor";
 import ScrollProgress from "@/components/ui/ScrollProgress";
+import AmbientMesh from "@/components/ui/AmbientMesh";
 
 const displayFont = Space_Grotesk({
   subsets: ["latin"],
@@ -60,7 +61,8 @@ export default function RootLayout({
       lang="en"
       className={`${displayFont.variable} ${serifFont.variable} ${bodyFont.variable} ${monoFont.variable}`}
     >
-      <body className="font-body bg-bg-base text-text-primary antialiased">
+      <body className="font-body bg-bg-base text-text-primary antialiased selection:bg-accent-violet selection:text-white">
+        <AmbientMesh />
         <SplashScreen />
         <Cursor />
         <ScrollProgress />

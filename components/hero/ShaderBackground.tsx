@@ -3,12 +3,10 @@ import { useEffect, useRef, useState } from "react";
 
 export default function ShaderBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-  }, []);
+  const [reduced] = useState(() =>
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
 
   useEffect(() => {
     if (reduced || !canvasRef.current) return;
@@ -123,7 +121,7 @@ void main() {
     const uRes   = gl.getUniformLocation(prog, "u_resolution");
     const uMouse = gl.getUniformLocation(prog, "u_mouse");
 
-    let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+    const mouse = { x: canvas.width / 2, y: canvas.height / 2 };
     const onMouse = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       if (rect.width && rect.height) {

@@ -30,7 +30,7 @@ export default function CtaBand() {
             />
 
             <div className="relative z-10 max-w-2xl">
-              <p className="label-mono-accent mb-4">// ready to build?</p>
+              <p className="label-mono-accent mb-4">{"// ready to build?"}</p>
               <RevealText
                 as="h2"
                 text="Your idea deserves production-grade code."

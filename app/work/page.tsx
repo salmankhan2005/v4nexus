@@ -1,261 +1,272 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { motion, useScroll, useTransform } from "framer-motion";
+import RevealText from "@/components/ui/RevealText";
+import Counter from "@/components/ui/Counter";
+import MagneticButton from "@/components/ui/MagneticButton";
 
 const ShaderBackground = dynamic(() => import("@/components/hero/ShaderBackground"), { ssr: false });
-
-// ── Design system ────────────────────────────────────────────────────────────
-const FILTERS = ["ALL PROJECTS", "WEB", "APP", "FULL-STACK"] as const;
-type Filter = typeof FILTERS[number];
+const WebGLGallery = dynamic(() => import("@/components/sections/WebGLGallery"), { ssr: false });
 
 const PROJECTS = [
   {
     id: 1,
-    name: "AI RESUME BUILDER",
+    name: "AI Resume Builder",
     category: "AI / WEB",
-    filter: ["ALL PROJECTS", "WEB"] as Filter[],
     stack: ["REACT", "AI", "VERCEL"],
-    result: "Reduces resume creation time from hours to minutes through AI-assisted content suggestions.",
+    result: "Cuts resume creation from hours to minutes with AI-assisted content suggestions.",
     image: "/images/ai_resume_builder.png",
     link: "https://remix-of-ai-resume-spark-main.vercel.app",
-    tagColor: "text-[#43f0d2] bg-[#43f0d2]/10 border-[#43f0d2]/20",
-    span: "col-span-12 md:col-span-8",
-    height: "h-[500px]",
   },
   {
     id: 2,
-    name: "AI COURSE GENERATOR",
+    name: "AI Course Generator",
     category: "ED-TECH",
-    filter: ["ALL PROJECTS", "WEB"] as Filter[],
     stack: ["REACT", "AI", "VERCEL"],
-    result: "Streamlines course creation for educators by automating content structuring.",
+    result: "Automates course structuring so educators publish in a fraction of the time.",
     image: "/images/ai_course_generator.png",
     link: "https://project-six-delta-36.vercel.app",
-    tagColor: "text-[#ffb4a3] bg-[#ffb4a3]/10 border-[#ffb4a3]/20",
-    span: "col-span-12 md:col-span-4",
-    height: "h-[500px]",
   },
   {
     id: 3,
-    name: "AI CAREER COACH",
+    name: "AI Career Coach",
     category: "AI / FULL-STACK",
-    filter: ["ALL PROJECTS", "FULL-STACK"] as Filter[],
     stack: ["NEXT.JS", "REACT", "AI"],
     result: "Helps users make informed career decisions through conversational AI guidance.",
     image: "/images/ai_career_coach.png",
     link: "https://ai-career-coach-full-stack.vercel.app",
-    tagColor: "text-[#c7bfff] bg-[#c7bfff]/10 border-[#c7bfff]/20",
-    span: "col-span-12 md:col-span-5",
-    height: "h-[400px]",
   },
   {
     id: 4,
-    name: "AI LEARNING PLATFORM",
+    name: "AI Learning Platform",
     category: "ED-TECH",
-    filter: ["ALL PROJECTS", "WEB"] as Filter[],
     stack: ["REACT", "AI"],
-    result: "Adapts learning paths based on user progress and goals.",
+    result: "Adapts learning paths in real time based on each user's progress and goals.",
     image: "/images/ai_learning_platform.png",
     link: "https://coure-brown.vercel.app",
-    tagColor: "text-[#43f0d2] bg-[#43f0d2]/10 border-[#43f0d2]/20",
-    span: "col-span-12 md:col-span-7",
-    height: "h-[400px]",
   },
   {
     id: 5,
-    name: "AI INTERVIEW COACH",
+    name: "AI Interview Coach",
     category: "AI / WEB",
-    filter: ["ALL PROJECTS", "WEB"] as Filter[],
     stack: ["AI", "WEB"],
-    result: "Improves interview performance through repeated, low-stakes practice.",
+    result: "Improves interview performance through repeated, low-stakes practice sessions.",
     image: "/images/ai_interview_coach.png",
     link: "https://ai-i-nterview.vercel.app",
-    tagColor: "text-[#e1e2eb] bg-[#e1e2eb]/10 border-white/10",
-    span: "col-span-12 md:col-span-4",
-    height: "h-[400px]",
   },
   {
     id: 6,
-    name: "DEEPAM ENGINEERING",
+    name: "Deepam Engineering",
     category: "MANUFACTURING",
-    filter: ["ALL PROJECTS", "WEB"] as Filter[],
     stack: ["WEB", "DESIGN"],
-    result: "Premium Container & Lorry Cabin Manufacturing in Tamil Nadu.",
+    result: "Premium container & lorry-cabin manufacturing brought online for Tamil Nadu.",
     image: "/images/deepam_engineering.png",
     link: "https://share.google/b6IxHxCEeg2Fj3FBf",
-    tagColor: "text-[#43f0d2] bg-[#43f0d2]/10 border-[#43f0d2]/20",
-    span: "col-span-12 md:col-span-8",
-    height: "h-[400px]",
   },
   {
     id: 7,
-    name: "SHREE KALYANI FOODS",
+    name: "Shree Kalyani Foods",
     category: "ECOMMERCE",
-    filter: ["ALL PROJECTS", "WEB"] as Filter[],
     stack: ["ECOMMERCE", "WEB"],
-    result: "Authentic South Indian Foods e-commerce experience.",
+    result: "An authentic South Indian foods e-commerce experience, built to convert.",
     image: "/images/shree_kalyani_foods.png",
     link: "https://share.google/1EavarHXWcR9tjp4g",
-    tagColor: "text-[#ffb4a3] bg-[#ffb4a3]/10 border-[#ffb4a3]/20",
-    span: "col-span-12 md:col-span-12",
-    height: "h-[500px]",
-  }
+  },
 ];
 
-export default function WorkPage() {
-  const [active, setActive] = useState<Filter>("ALL PROJECTS");
+const STATS = [
+  { num: "40+", label: "products shipped" },
+  { num: "12", label: "industries served" },
+  { num: "7", label: "live case studies" },
+  { num: "100%", label: "client satisfaction" },
+];
 
-  // Parallax on scroll (matches the Stitch micro-interaction script)
+/* ── Pinned horizontal gallery ──────────────────────────────── */
+function HorizontalGallery() {
+  const targetRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ 
+    target: targetRef,
+    offset: ["start start", "end end"]
+  });
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scrollRange, setScrollRange] = useState(0);
+
   useEffect(() => {
-    const onScroll = () => {
-      const imgs = document.querySelectorAll<HTMLElement>(".parallax-img");
-      const scrolled = window.pageYOffset;
-      imgs.forEach((img) => {
-        const yPos = -(scrolled * 0.05);
-        img.style.transform = `translateY(${yPos}px) scale(1.1)`;
-      });
+    const updateRange = () => {
+      if (containerRef.current) {
+        const scrollWidth = containerRef.current.scrollWidth;
+        const viewportWidth = document.documentElement.clientWidth;
+        setScrollRange(-(scrollWidth - viewportWidth));
+      }
     };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    updateRange();
+    window.addEventListener("resize", updateRange);
+    return () => window.removeEventListener("resize", updateRange);
   }, []);
 
-  const filtered = PROJECTS.filter((p) => p.filter.includes(active));
+  const x = useTransform(scrollYProgress, [0, 1], [0, scrollRange]);
+  const progress = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <div className="min-h-screen bg-[#10131a] text-[#e1e2eb] overflow-x-hidden selection:bg-[#43f0d2]/30 selection:text-[#43f0d2]">
-
-      {/* ── WebGL Shader Background (fixed, 40% opacity) ───────────────────── */}
-      <div className="fixed inset-0 z-[-1] pointer-events-none opacity-40">
-        <ShaderBackground />
-      </div>
-
-      {/* ── Main ────────────────────────────────────────────────────────────── */}
-      <main className="relative pt-[80px] pb-20 px-8 md:px-20 max-w-[1600px] mx-auto">
-
-        {/* ── Hero Header ─────────────────────────────────────────────────── */}
-        <header className="mt-12 mb-20 max-w-4xl">
-          <div
-            className="font-mono text-[#43f0d2] text-[11px] tracking-[0.3em] uppercase mb-3"
-          >
-            STUDIO PORTFOLIO
-          </div>
-          <h1
-            className="font-display font-bold text-[64px] md:text-[110px] leading-[0.95] tracking-tight text-[#e1e2eb] mb-6"
-          >
-            Engineered <br />
-            <span className="text-[#43f0d2]">Excellence.</span>
-          </h1>
-          <p className="font-body text-[#8B92A5] text-lg max-w-xl leading-relaxed">
-            Synthesizing complex logic into elegant digital architecture. Our work spans from
-            high-frequency trading platforms to immersive luxury web experiences.
-          </p>
-        </header>
-
-        {/* ── Filter Bar ──────────────────────────────────────────────────── */}
-        <div className="flex flex-wrap items-center gap-6 mb-12 border-b border-white/5 pb-2">
-          {FILTERS.map((f) => (
-            <button
-              key={f}
-              onClick={() => setActive(f)}
-              className={`font-mono text-[11px] tracking-widest uppercase pb-2 px-1 transition-all duration-200 ${
-                active === f
-                  ? "text-[#43f0d2] border-b-2 border-[#43f0d2]"
-                  : "text-[#8B92A5] hover:text-[#43f0d2] border-b-2 border-transparent"
-              }`}
-            >
-              {f}
-            </button>
-          ))}
-        </div>
-
-        {/* ── Asymmetric 12-col Project Grid ──────────────────────────────── */}
-        <div className="grid grid-cols-12 gap-6">
-          {filtered.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </div>
-
-        {/* ── CTA ─────────────────────────────────────────────────────────── */}
-        <section className="mt-20 py-20 border-t border-white/5 text-center">
-          <h2 className="font-display font-bold text-[56px] leading-[1.1] tracking-tight text-[#e1e2eb] mb-6">
-            Ready to start?
+    <section ref={targetRef} className="relative hidden h-[420vh] lg:block">
+      <div className="sticky top-0 flex h-screen items-center overflow-hidden">
+        {/* heading rail */}
+        <div className="pointer-events-none absolute left-8 top-24 z-20">
+          <p className="label-mono-accent mb-3">{"// selected work — scroll"}</p>
+          <h2 className="display-xl max-w-sm text-text-primary">
+            The <span className="em em-solar">portfolio.</span>
           </h2>
-          <Link
-            href="/contact"
-            className="inline-block bg-[#43f0d2] text-[#10131a] font-mono text-xs tracking-widest px-20 py-5 uppercase hover:bg-white hover:text-black transition-all active:scale-95"
-            style={{ boxShadow: "0 0 20px rgba(67,240,210,0.1)" }}
-          >
-            INITIATE PROJECT_00
-          </Link>
-        </section>
-      </main>
-    </div>
+        </div>
+
+        <motion.div ref={containerRef} style={{ x }} className="flex w-max gap-8 pl-[8vw] pr-[8vw]">
+          {PROJECTS.map((p, i) => (
+            <GalleryCard key={p.id} project={p} index={i} />
+          ))}
+        </motion.div>
+
+        {/* progress rail */}
+        <div className="absolute bottom-10 left-8 right-8 z-20 h-px bg-white/10">
+          <motion.div style={{ width: progress }} className="h-full bg-gradient-to-r from-accent-violet to-accent-cyan" />
+        </div>
+      </div>
+    </section>
   );
 }
 
-// ── Project Card Component ────────────────────────────────────────────────────
-function ProjectCard({ project }: { project: typeof PROJECTS[0] }) {
+function GalleryCard({ project, index }: { project: (typeof PROJECTS)[0]; index: number }) {
   const [hovered, setHovered] = useState(false);
-
   return (
-    <Link href={project.link} target="_blank" rel="noopener noreferrer" className={`${project.span} group block`}>
-      <div
-        className="relative overflow-hidden cursor-pointer glass-card"
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
-        <div className={`relative ${project.height}`}>
-          {/* Project image */}
-          <Image
-            src={project.image}
-            alt={project.name}
-            fill
-            className={`object-cover parallax-img transition-all duration-700 ${
-              hovered ? "grayscale-0 scale-100" : "grayscale scale-[1.05]"
-            }`}
-            sizes="(max-width: 768px) 100vw, 66vw"
-          />
+    <Link
+      href={project.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      data-cursor-label="Open"
+      className="group relative block h-[62vh] w-[70vw] shrink-0 overflow-hidden rounded-2xl xl:w-[52vw]"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <Image
+        src={project.image}
+        alt={project.name}
+        fill
+        className={`object-cover transition-all duration-700 ${hovered ? "scale-100 grayscale-0" : "scale-105 grayscale"}`}
+        sizes="70vw"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-bg-base via-bg-base/30 to-transparent" />
 
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#10131a] to-transparent opacity-80 z-10" />
+      <span className="absolute right-8 top-6 font-display text-7xl font-bold text-white/10">
+        0{index + 1}
+      </span>
 
-          {/* Category badge */}
-          <div className="absolute top-6 left-6 z-20">
-            <span className={`font-mono text-[10px] tracking-widest uppercase px-3 py-1 border ${project.tagColor}`}>
-              {project.category}
+      <div className="absolute left-8 top-7 flex items-center gap-2">
+        <span className="live-dot" />
+        <span className="border border-white/10 bg-black/30 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-accent-cyan backdrop-blur-sm">
+          {project.category}
+        </span>
+      </div>
+
+      <div className="absolute inset-x-8 bottom-8">
+        <h3 className="mb-3 font-display text-3xl font-bold tracking-tight text-text-primary">
+          {project.name}
+        </h3>
+        <div className="mb-3 flex flex-wrap gap-2">
+          {project.stack.map((t) => (
+            <span key={t} className="border border-white/10 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-text-muted">
+              {t}
             </span>
-          </div>
-
-          {/* Bottom content */}
-          <div className="absolute bottom-6 left-6 right-6 z-20">
-            <h3 className="font-display font-bold text-[28px] leading-tight tracking-tight text-[#e1e2eb] mb-2">
-              {project.name}
-            </h3>
-
-            {/* Hover overlay content */}
-            <div
-              className="transition-opacity duration-300"
-              style={{ opacity: hovered ? 1 : 0 }}
-            >
-              <div className="flex flex-wrap gap-2 mb-3">
-                {project.stack.map((tech) => (
-                  <span
-                    key={tech}
-                    className="font-mono text-[10px] tracking-widest text-[#c8c4d6] border border-white/10 px-3 py-1 uppercase"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-              <p className="font-body text-[#43f0d2] text-sm leading-relaxed">
-                {project.result}
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
+        <p className="max-w-md font-body text-sm leading-relaxed text-text-muted">{project.result}</p>
       </div>
     </Link>
+  );
+}
+
+/* ── Mobile / fallback stacked grid ─────────────────────────── */
+function StackedGrid() {
+  return (
+    <section className="mx-auto max-w-3xl px-6 py-16 lg:hidden">
+      <p className="label-mono-accent mb-3">{"// selected work"}</p>
+      <h2 className="display-xl mb-10 text-text-primary">The portfolio.</h2>
+      <div className="grid grid-cols-1 gap-5">
+        {PROJECTS.map((p, i) => (
+          <Link
+            key={p.id}
+            href={p.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="glass-card relative block h-[300px] overflow-hidden"
+          >
+            <Image src={p.image} alt={p.name} fill className="object-cover" sizes="100vw" />
+            <div className="absolute inset-0 bg-gradient-to-t from-bg-base via-bg-base/40 to-transparent" />
+            <span className="absolute right-4 top-3 font-display text-4xl font-bold text-white/10">0{i + 1}</span>
+            <div className="absolute inset-x-5 bottom-5">
+              <span className="mb-2 inline-block border border-white/10 bg-black/30 px-2 py-1 font-mono text-[9px] uppercase tracking-widest text-accent-cyan">
+                {p.category}
+              </span>
+              <h3 className="font-display text-xl font-bold text-text-primary">{p.name}</h3>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export default function WorkPage() {
+  return (
+    <div className="overflow-clip pt-16">
+      <div className="fixed inset-0 z-[-1] opacity-30">
+        <ShaderBackground />
+      </div>
+
+      {/* header */}
+      <header className="mx-auto max-w-7xl px-6 pb-10 pt-20 lg:px-8">
+        <p className="label-mono-accent mb-4">{"// studio portfolio"}</p>
+        <RevealText
+          as="h1"
+          text="Engineered excellence."
+          emphasis={{ "excellence.": "solar" }}
+          className="display-hero block text-text-primary"
+        />
+        <p className="mt-6 max-w-xl font-body text-lg leading-relaxed text-text-muted">
+          Real products for real clients — from AI tools to manufacturing and commerce. Every project
+          below is live. Click through and see for yourself.
+        </p>
+
+        <div className="mt-12 grid grid-cols-2 gap-6 border-t border-white/[0.07] pt-8 md:grid-cols-4">
+          {STATS.map((s) => (
+            <div key={s.label}>
+              <p className="font-display text-4xl font-bold text-text-primary">
+                <Counter value={s.num} />
+              </p>
+              <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.15em] text-text-muted">{s.label}</p>
+            </div>
+          ))}
+        </div>
+      </header>
+
+      <WebGLGallery projects={PROJECTS} />
+      <StackedGrid />
+
+      {/* CTA */}
+      <section className="mx-auto max-w-7xl px-6 py-24 text-center lg:px-8">
+        <div className="section-divider mb-16" />
+        <RevealText
+          as="h2"
+          text="Ready to start yours?"
+          emphasis={{ yours: "solar" }}
+          className="display-xl mb-8 block text-text-primary"
+        />
+        <div className="flex justify-center" data-cursor-label="Let's talk">
+          <MagneticButton href="/contact" variant="coral">
+            Initiate a project
+          </MagneticButton>
+        </div>
+      </section>
+    </div>
   );
 }

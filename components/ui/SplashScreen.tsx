@@ -5,7 +5,10 @@ import Image from "next/image";
 export default function SplashScreen() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
-  const [reduced, setReduced] = useState(false);
+  const [reduced] = useState(() =>
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
   const [counter, setCounter] = useState(0);
   const [logoOpacity, setLogoOpacity] = useState(0);
   const [taglineOpacity, setTaglineOpacity] = useState(0);
@@ -13,11 +16,6 @@ export default function SplashScreen() {
   const [containerScale, setContainerScale] = useState(1);
   const [pulseScale, setPulseScale] = useState(1);
   const [pulseOpacity, setPulseOpacity] = useState(0);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-  }, []);
 
   useEffect(() => {
     if (!isVisible) return;
@@ -65,11 +63,12 @@ export default function SplashScreen() {
     const container = containerRef.current;
 
     let rafId: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let THREE: any = null;
 
     // Load Image for Pixel Sampling
     const img = new window.Image();
-    let validPoints: {x: number, y: number}[] = [];
+    const validPoints: {x: number, y: number}[] = [];
     
     img.onload = () => {
       const canvas = document.createElement('canvas');
@@ -110,9 +109,9 @@ export default function SplashScreen() {
     img.src = '/logo.png';
 
     function loadThreeJS() {
-      // @ts-expect-error THREE is loaded globally from CDN
+      // @ts-expect-error THREE loaded globally from CDN
       if (window.THREE) {
-        // @ts-expect-error
+        // @ts-expect-error THREE loaded globally from CDN
         THREE = window.THREE;
         initScene();
         return;
@@ -122,7 +121,7 @@ export default function SplashScreen() {
       script.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js";
       script.async = true;
       script.onload = () => {
-        // @ts-expect-error
+        // @ts-expect-error THREE loaded globally from CDN
         THREE = window.THREE;
         if (!THREE) return;
         initScene();
@@ -207,7 +206,7 @@ export default function SplashScreen() {
       scene.add(particles);
       camera.position.z = 5;
 
-      let startTime = performance.now();
+      const startTime = performance.now();
       
       const animate = (time: number) => {
         rafId = requestAnimationFrame(animate);
@@ -226,10 +225,6 @@ export default function SplashScreen() {
         } 
         // --- 0.3s - 3.0s : Converge to Logo ---
         else if (t >= 0.3 && t < 3.0) {
-          const progress = (t - 0.3) / 2.7; 
-          // Easing: easeOutCubic
-          const ease = 1 - Math.pow(1 - progress, 3);
-          
           for (let i = 0; i < count; i++) {
             const currentX = posAttr.array[i * 3];
             const currentY = posAttr.array[i * 3 + 1];
@@ -249,8 +244,6 @@ export default function SplashScreen() {
         // --- > 3.0s : Hold Logo shape ---
         else {
           setLogoOpacity(1);
-          // Very subtle floating for particles while in logo shape
-          const floatTime = time * 0.001;
           for (let i = 0; i < count; i++) {
             const tx = logoPositions[i * 3];
             const ty = logoPositions[i * 3 + 1];
@@ -384,7 +377,7 @@ export default function SplashScreen() {
             className="font-mono text-accent-cyan text-sm tracking-[0.2em] uppercase font-bold"
             style={{ opacity: taglineOpacity, transition: 'opacity 0.1s linear' }}
           >
-            BUILDING WHAT'S NEXT
+            BUILDING WHAT&apos;S NEXT
           </p>
         </div>
         

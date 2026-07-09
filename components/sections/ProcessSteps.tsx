@@ -35,11 +35,11 @@ export default function ProcessSteps() {
 
       <div className="mb-16 flex flex-col items-center justify-between gap-8 lg:flex-row">
         <div>
-          <p className="label-mono-accent mb-4">// how we work</p>
+          <p className="label-mono-accent mb-4">{"// how we work"}</p>
           <RevealText
             as="h2"
             text="Predictable from day one."
-            emphasis={{ "day": "iris", "one": "iris" }}
+            emphasis={{ day: "iris", one: "iris" }}
             className="display-xl block max-w-md text-text-primary"
           />
         </div>

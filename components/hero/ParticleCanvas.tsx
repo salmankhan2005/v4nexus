@@ -3,12 +3,10 @@ import { useEffect, useRef, useState } from "react";
 
 export default function ParticleCanvas() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-  }, []);
+  const [reduced] = useState(() =>
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
 
   useEffect(() => {
     if (reduced || !containerRef.current) return;

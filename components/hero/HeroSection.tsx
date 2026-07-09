@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import MagneticButton from "@/components/ui/MagneticButton";
 
 const ShaderBackground = dynamic(() => import("./ShaderBackground"), { ssr: false });
-const ParticleCanvas = dynamic(() => import("./ParticleCanvas"), {
+const WebGLInteractiveSphere = dynamic(() => import("./WebGLInteractiveSphere"), {
   ssr: false,
   loading: () => (
     <div className="flex h-full w-full items-center justify-center">
@@ -58,7 +58,8 @@ export default function HeroSection() {
             {["We build", "digital products"].map((l, i) => (
               <span key={l} className="reveal-mask block">
                 <motion.span
-                  className="block"
+                  className={`block ${i === 1 ? 'glitch-text glitch-on-load glitch-hover' : ''}`}
+                  data-text={l}
                   variants={line}
                   initial="hidden"
                   animate="visible"
@@ -116,7 +117,9 @@ export default function HeroSection() {
           transition={{ duration: 1.2, delay: 0.4 }}
           className="relative h-[360px] lg:col-span-5 lg:h-[560px] lg:-mr-10 xl:-mr-24"
         >
-          <ParticleCanvas />
+          <div className="absolute right-0 top-1/2 hidden h-[600px] w-[600px] -translate-y-1/2 lg:block">
+            <WebGLInteractiveSphere />
+          </div>
           {/* console readout overlay */}
           <div className="pointer-events-none absolute bottom-2 left-2 hidden font-mono text-[10px] uppercase leading-relaxed tracking-widest text-text-muted/70 lg:block">
             <p>&gt; nexus.core — online</p>

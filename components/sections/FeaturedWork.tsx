@@ -116,11 +116,11 @@ export default function FeaturedWork() {
     <section className="mx-auto max-w-7xl px-6 py-28 lg:px-8">
       <ScrollReveal className="mb-14 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
         <div>
-          <p className="label-mono-accent mb-4">// selected work</p>
+          <p className="label-mono-accent mb-4">{"// selected work"}</p>
           <RevealText
             as="h2"
             text="Real results, real clients."
-            emphasis={{ "clients": "solar" }}
+            emphasis={{ clients: "solar" }}
             className="display-xl block text-text-primary"
           />
         </div>

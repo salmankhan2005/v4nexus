@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import MagneticButton from "@/components/ui/MagneticButton";
 
@@ -16,6 +16,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const lastPath = useRef(pathname);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -24,17 +25,22 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    setMenuOpen(false);
+    if (lastPath.current !== pathname) {
+      lastPath.current = pathname;
+      setMenuOpen((open) => (open ? false : open));
+    }
   }, [pathname]);
 
   return (
     <>
       <nav
-        className={`fixed inset-x-0 top-0 z-[60] transition-all duration-500 ${
-          scrolled ? "border-b border-white/[0.08] bg-bg-base/60 backdrop-blur-2xl" : ""
+        className={`fixed inset-x-4 top-4 z-[60] mx-auto max-w-7xl transition-all duration-500 rounded-full ${
+          scrolled
+            ? "border border-white/10 bg-bg-base/70 backdrop-blur-3xl shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+            : "border border-transparent bg-transparent"
         }`}
       >
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between px-6 lg:px-8">
           <Link href="/" className="group flex items-center gap-2.5" data-cursor-label="Home">
             <span className="relative flex h-6 w-6 items-center justify-center">
               <span className="absolute inset-0 rounded-[5px] bg-gradient-to-br from-accent-violet to-accent-cyan opacity-90 transition-transform duration-500 group-hover:rotate-90" />
@@ -58,12 +64,12 @@ export default function Navbar() {
                     }`}
                   >
                     {label}
-                    {active && (
+                    {active ? (
                       <motion.span
                         layoutId="nav-active"
                         className="absolute -bottom-1.5 left-0 h-px w-full bg-accent-cyan"
                       />
-                    )}
+                    ) : null}
                   </Link>
                 </li>
               );
@@ -89,7 +95,7 @@ export default function Navbar() {
       </nav>
 
       <AnimatePresence>
-        {menuOpen && (
+        {menuOpen ? (
           <motion.div
             initial={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
             animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
@@ -116,7 +122,7 @@ export default function Navbar() {
               Book a call
             </MagneticButton>
           </motion.div>
-        )}
+        ) : null}
       </AnimatePresence>
     </>
   );

@@ -1,10 +1,12 @@
 "use client";
 import { motion } from "framer-motion";
-import { ElementType, Fragment } from "react";
+import { Fragment } from "react";
+
+type Tag = "span" | "div" | "p" | "h1" | "h2" | "h3";
 
 interface RevealTextProps {
   text: string;
-  as?: ElementType;
+  as?: Tag;
   className?: string;
   delay?: number;
   stagger?: number;
@@ -13,13 +15,24 @@ interface RevealTextProps {
   emphasis?: Record<string, "iris" | "solar">;
 }
 
+// Pre-created motion components (never created during render).
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const MOTION: Record<Tag, any> = {
+  span: motion.span,
+  div: motion.div,
+  p: motion.p,
+  h1: motion.h1,
+  h2: motion.h2,
+  h3: motion.h3,
+};
+
 /**
  * Word-by-word "curtain" reveal — each word rises from behind an
  * overflow mask. The real text stays in the DOM (accessible & SEO-safe).
  */
 export default function RevealText({
   text,
-  as: Tag = "span",
+  as = "span",
   className = "",
   delay = 0,
   stagger = 0.045,
@@ -27,11 +40,7 @@ export default function RevealText({
   emphasis = {},
 }: RevealTextProps) {
   const words = text.split(" ");
-  const MotionTag =
-    typeof Tag === "string"
-      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ((motion as any)[Tag] ?? motion.span)
-      : motion(Tag);
+  const MotionTag = MOTION[as] ?? motion.span;
 
   return (
     <MotionTag

@@ -23,18 +23,24 @@ export default function MagneticButton({
   const ref = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState({ x: 0, y: 0 });
 
+  const [isHovered, setIsHovered] = useState(false);
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!ref.current) return;
     const rect = ref.current.getBoundingClientRect();
     const x = (e.clientX - rect.left - rect.width / 2) * 0.25;
     const y = (e.clientY - rect.top - rect.height / 2) * 0.25;
     setPos({ x, y });
+    setIsHovered(true);
   };
 
-  const handleMouseLeave = () => setPos({ x: 0, y: 0 });
+  const handleMouseLeave = () => {
+    setPos({ x: 0, y: 0 });
+    setIsHovered(false);
+  };
 
   const baseClasses =
-    "relative inline-flex items-center justify-center px-5 py-2.5 rounded-full font-mono text-[11px] tracking-[0.12em] uppercase font-medium transition-all duration-200 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan";
+    "relative inline-flex items-center justify-center px-5 py-2.5 rounded-full font-mono text-[11px] tracking-[0.12em] uppercase font-medium transition-colors duration-200 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan";
 
   const variants = {
     coral:   "bg-signal-coral text-bg-base hover:brightness-110",
@@ -50,7 +56,7 @@ export default function MagneticButton({
       className="inline-flex"
     >
       <motion.span
-        animate={{ x: pos.x, y: pos.y }}
+        animate={{ x: pos.x, y: pos.y, scale: isHovered ? 0.95 : 1 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         className={`${baseClasses} ${variants[variant]} ${className}`}
       >

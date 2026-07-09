@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import RevealText from "@/components/ui/RevealText";
 import MagneticButton from "@/components/ui/MagneticButton";
 import LottieClient from "@/components/ui/LottieClient";
 import meetingAnim from "@/components/animations/meeting.json";
@@ -14,71 +15,83 @@ export default function ContactPage() {
     name: "", email: "", type: "", budget: "", message: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
     const subject = encodeURIComponent(`New Project Inquiry from ${form.name}`);
     const body = encodeURIComponent(
       `Name: ${form.name}\n` +
-      `Email: ${form.email}\n` +
-      `Project Type: ${form.type}\n` +
-      `Budget: ${form.budget}\n\n` +
-      `Message:\n${form.message}`
+        `Email: ${form.email}\n` +
+        `Project Type: ${form.type}\n` +
+        `Budget: ${form.budget}\n\n` +
+        `Message:\n${form.message}`
     );
-    
     window.location.href = `mailto:v4nexustech@gmail.com?subject=${subject}&body=${body}`;
-    
     setSent(true);
   };
 
+  const inputCls =
+    "w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-body text-sm text-text-primary backdrop-blur-md transition-all placeholder:text-text-muted/50 focus:border-accent-cyan/60 focus:shadow-[0_0_0_3px_rgba(255,138,61,0.10)] focus:outline-none";
+
   return (
     <div className="pt-24">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
-
-          {/* Left — headline */}
+      <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+        <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-2 lg:gap-24">
+          {/* Left */}
           <div>
-            <ScrollReveal>
-              <p className="label-mono-accent mb-4">// get in touch</p>
-              <h1 className="font-display font-bold text-5xl lg:text-6xl xl:text-7xl text-text-primary leading-tight mb-6">
-                Let&apos;s build<br />
-                <span className="text-gradient-vio-cyan">something great.</span>
-              </h1>
-              <p className="font-body text-text-muted text-lg leading-relaxed max-w-md mb-10">
-                Fill in the form or grab time directly on our calendar. Either way, you&apos;ll hear back within one business day.
+            <p className="label-mono-accent mb-4">{"// get in touch"}</p>
+            <RevealText
+              as="h1"
+              text="Let's build something great."
+              emphasis={{ great: "solar" }}
+              className="display-hero block text-text-primary"
+            />
+            <ScrollReveal delay={0.1}>
+              <p className="mb-10 mt-6 max-w-md font-body text-lg leading-relaxed text-text-muted">
+                Fill in the form or grab time directly on our calendar. Either way, you&apos;ll hear back
+                within one business day.
               </p>
             </ScrollReveal>
 
-            {/* Calendly placeholder */}
-            <ScrollReveal delay={0.1}>
-              <div className="surface-card surface-card-hover p-8 flex flex-col items-center justify-center gap-4 text-center min-h-[200px] group cursor-default">
-                <div className="w-24 h-24 mix-blend-screen opacity-90 -mt-2">
+            <ScrollReveal delay={0.15}>
+              <div
+                data-cursor
+                className="surface-card surface-card-hover flex min-h-[200px] flex-col items-center justify-center gap-4 p-8 text-center"
+              >
+                <div className="-mt-2 h-24 w-24 opacity-90 mix-blend-screen">
                   <LottieClient animationData={meetingAnim} />
                 </div>
                 <div>
-                  <p className="font-display font-bold text-text-primary mb-1">Book a 30-min call</p>
+                  <p className="mb-1 font-display font-bold text-text-primary">Book a 30-min call</p>
                   <p className="label-mono">Speak directly with our team</p>
                 </div>
-                <MagneticButton href="tel:+918428687001" variant="coral">
-                  Book a Call
-                </MagneticButton>
+                <div data-cursor-label="Call">
+                  <MagneticButton href="tel:+918428687001" variant="coral">
+                    Book a call
+                  </MagneticButton>
+                </div>
               </div>
             </ScrollReveal>
 
-            {/* Direct contact */}
-            <ScrollReveal delay={0.15} className="mt-8 flex gap-6">
+            <ScrollReveal delay={0.2} className="mt-8 flex gap-6">
               {[
                 { label: "Phone", value: "+91 8428687001", href: "tel:+918428687001" },
                 { label: "Email", value: "v4nexustech@gmail.com", href: "mailto:v4nexustech@gmail.com" },
-                { label: "Twitter", value: "@v4nexus", href: "https://twitter.com/v4nexus" },
+                { label: "WhatsApp", value: "@v4nexus", href: "https://wa.me/918428687001" },
               ].map(({ label, value, href }) => (
                 <div key={label}>
                   <p className="label-mono mb-1">{label}</p>
-                  <a href={href} className="font-body text-text-muted hover:text-accent-cyan transition-colors text-sm">{value}</a>
+                  <a
+                    href={href}
+                    className="font-body text-sm text-text-muted transition-colors hover:text-accent-cyan"
+                  >
+                    {value}
+                  </a>
                 </div>
               ))}
             </ScrollReveal>
@@ -87,78 +100,81 @@ export default function ContactPage() {
           {/* Right — form */}
           <ScrollReveal delay={0.05} direction="right">
             {sent ? (
-              <div className="surface-card surface-card-hover p-12 flex flex-col items-center justify-center gap-6 text-center min-h-[500px] group cursor-default">
-                <div className="w-16 h-16 rounded-full bg-accent-cyan/20 flex items-center justify-center text-3xl">✓</div>
+              <div className="surface-card flex min-h-[500px] flex-col items-center justify-center gap-6 p-12 text-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent-cyan/20 text-3xl text-accent-cyan">
+                  ✓
+                </div>
                 <div>
-                  <h2 className="font-display font-bold text-2xl text-text-primary mb-2">Message sent!</h2>
-                  <p className="font-body text-text-muted">We&apos;ll get back to you within one business day.</p>
+                  <h2 className="mb-2 font-display text-2xl font-bold text-text-primary">Message sent!</h2>
+                  <p className="font-body text-text-muted">
+                    We&apos;ll get back to you within one business day.
+                  </p>
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="surface-card surface-card-hover p-8 lg:p-10 space-y-6 group">
-                <p className="label-mono mb-2">// project brief</p>
+              <form onSubmit={handleSubmit} className="surface-card space-y-6 p-8 lg:p-10">
+                <p className="label-mono mb-2">{"// project brief"}</p>
 
-                {/* Name */}
                 <div>
-                  <label className="label-mono block mb-2" htmlFor="name">Name</label>
+                  <label className="label-mono mb-2 block" htmlFor="name">Name</label>
                   <input
                     id="name" name="name" type="text" required
                     value={form.name} onChange={handleChange}
-                    placeholder="[YOUR NAME]"
-                    className="w-full bg-white/5 backdrop-blur-md border border-white/10 rounded-lg px-4 py-3 font-body text-text-primary text-sm placeholder:text-text-muted/50 focus:outline-none focus:border-accent-cyan/60 focus:shadow-[0_0_0_3px_rgba(51,230,201,0.08)] transition-all"
+                    placeholder="Your name"
+                    className={inputCls}
                   />
                 </div>
 
-                {/* Email */}
                 <div>
-                  <label className="label-mono block mb-2" htmlFor="email">Email</label>
+                  <label className="label-mono mb-2 block" htmlFor="email">Email</label>
                   <input
                     id="email" name="email" type="email" required
                     value={form.email} onChange={handleChange}
                     placeholder="you@company.com"
-                    className="w-full bg-white/5 backdrop-blur-md border border-white/10 rounded-lg px-4 py-3 font-body text-text-primary text-sm placeholder:text-text-muted/50 focus:outline-none focus:border-accent-cyan/60 focus:shadow-[0_0_0_3px_rgba(51,230,201,0.08)] transition-all"
+                    className={inputCls}
                   />
                 </div>
 
-                {/* Project type */}
                 <div>
-                  <label className="label-mono block mb-2" htmlFor="type">Project Type</label>
+                  <label className="label-mono mb-2 block" htmlFor="type">Project Type</label>
                   <select
                     id="type" name="type" required
                     value={form.type} onChange={handleChange}
-                    className="w-full bg-transparent border border-white/10 rounded-lg px-4 py-3 font-body text-text-primary text-sm focus:outline-none focus:border-accent-cyan/60 transition-all appearance-none"
+                    className={`${inputCls} appearance-none`}
                   >
                     <option value="" disabled className="bg-bg-base text-text-primary">Select type...</option>
-                    {PROJECT_TYPES.map((t) => <option key={t} value={t} className="bg-bg-base text-text-primary">{t}</option>)}
+                    {PROJECT_TYPES.map((t) => (
+                      <option key={t} value={t} className="bg-bg-base text-text-primary">{t}</option>
+                    ))}
                   </select>
                 </div>
 
-                {/* Budget */}
                 <div>
-                  <label className="label-mono block mb-2" htmlFor="budget">Budget Range</label>
+                  <label className="label-mono mb-2 block" htmlFor="budget">Budget Range</label>
                   <select
                     id="budget" name="budget" required
                     value={form.budget} onChange={handleChange}
-                    className="w-full bg-transparent border border-white/10 rounded-lg px-4 py-3 font-body text-text-primary text-sm focus:outline-none focus:border-accent-cyan/60 transition-all appearance-none"
+                    className={`${inputCls} appearance-none`}
                   >
                     <option value="" disabled className="bg-bg-base text-text-primary">Select range...</option>
-                    {BUDGETS.map((b) => <option key={b} value={b} className="bg-bg-base text-text-primary">{b}</option>)}
+                    {BUDGETS.map((b) => (
+                      <option key={b} value={b} className="bg-bg-base text-text-primary">{b}</option>
+                    ))}
                   </select>
                 </div>
 
-                {/* Message */}
                 <div>
-                  <label className="label-mono block mb-2" htmlFor="message">Tell us about the project</label>
+                  <label className="label-mono mb-2 block" htmlFor="message">Tell us about the project</label>
                   <textarea
                     id="message" name="message" rows={5} required
                     value={form.message} onChange={handleChange}
                     placeholder="What are you building? What's the timeline?"
-                    className="w-full bg-white/5 backdrop-blur-md border border-white/10 rounded-lg px-4 py-3 font-body text-text-primary text-sm placeholder:text-text-muted/50 focus:outline-none focus:border-accent-cyan/60 focus:shadow-[0_0_0_3px_rgba(51,230,201,0.08)] transition-all resize-none"
+                    className={`${inputCls} resize-none`}
                   />
                 </div>
 
                 <MagneticButton type="submit" variant="coral" className="w-full justify-center">
-                  Send Message
+                  Send message
                 </MagneticButton>
               </form>
             )}
