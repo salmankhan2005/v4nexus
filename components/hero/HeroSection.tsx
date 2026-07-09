@@ -117,7 +117,7 @@ export default function HeroSection() {
           transition={{ duration: 1.2, delay: 0.4 }}
           className="relative mt-8 h-[350px] w-full lg:col-span-5 lg:mt-0 lg:h-[560px] lg:-mr-10 xl:-mr-24"
         >
-          <div className="absolute left-1/2 top-1/2 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 lg:left-auto lg:right-0 lg:h-[600px] lg:w-[600px] lg:translate-x-0">
+          <div className="pointer-events-none absolute left-1/2 top-1/2 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 lg:pointer-events-auto lg:left-auto lg:right-0 lg:h-[600px] lg:w-[600px] lg:translate-x-0">
             <WebGLInteractiveSphere />
           </div>
           {/* console readout overlay */}

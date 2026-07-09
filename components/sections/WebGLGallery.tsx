@@ -361,13 +361,15 @@ function Scene({
         imageUrls={projects.map((p) => p.image)}
       />
 
-      {/* Drag-to-rotate */}
-      <OrbitControls
-        enableZoom={false}
-        enablePan={false}
-        dampingFactor={0.05}
-        rotateSpeed={0.4}
-      />
+      {/* Drag-to-rotate only on desktop so mobile can scroll freely */}
+      {!isMobile && (
+        <OrbitControls
+          enableZoom={false}
+          enablePan={false}
+          dampingFactor={0.05}
+          rotateSpeed={0.4}
+        />
+      )}
     </group>
   );
 }
@@ -408,7 +410,7 @@ export default function WebGLGallery({ projects }: { projects: any[] }) {
       <div className="sticky top-0 h-[100dvh] w-full overflow-hidden" style={{ background: "linear-gradient(180deg, #06061a 0%, #0a0a2e 50%, #060618 100%)" }}>
 
         {/* 3D Canvas */}
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0 pointer-events-none lg:pointer-events-auto">
           {canvasReady ? (
             <Canvas
               camera={{ position: [0, 0, 9], fov: 42 }}
