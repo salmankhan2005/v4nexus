@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect, useMemo, Suspense, useCallback } from "react";
 import Link from "next/link";
 import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
-import { Environment, Float, OrbitControls } from "@react-three/drei";
+import { Environment, Float, OrbitControls, MeshTransmissionMaterial } from "@react-three/drei";
 import { motion, useScroll, useInView, AnimatePresence } from "framer-motion";
 import * as THREE from "three";
 
@@ -284,25 +284,22 @@ function Crystal({
             />
           </mesh>
 
-          {/* ── OUTER MESH: glass shell with edge highlights ── */}
+          {/* ── OUTER MESH: glass shell with high refraction ── */}
           <mesh>
             <dodecahedronGeometry args={[2.8, 0]} />
-            <meshPhysicalMaterial
+            <MeshTransmissionMaterial
+              backside
+              samples={4}
+              thickness={2.5}
+              roughness={0}
+              transmission={1}
+              ior={1.45}
+              chromaticAberration={0.06}
+              anisotropy={0.3}
               color="#ffffff"
-              metalness={0.1}
-              roughness={0.0}
-              transmission={0.6}
-              thickness={0.5}
-              ior={2.0}
-              envMapIntensity={3}
+              envMapIntensity={4}
               clearcoat={1}
               clearcoatRoughness={0}
-              transparent
-              opacity={0.3}
-              side={THREE.FrontSide}
-              specularIntensity={2}
-              specularColor={new THREE.Color("#aaddff")}
-              depthWrite={false}
             />
           </mesh>
 
