@@ -396,10 +396,10 @@ export default function WebGLGallery({ projects }: { projects: any[] }) {
   return (
     <section
       ref={containerRef}
-      className="relative hidden lg:block"
+      className="relative block"
       style={{ height: `${projects.length * 100}vh` }}
     >
-      <div className="sticky top-0 h-screen w-full overflow-hidden" style={{ background: "linear-gradient(180deg, #06061a 0%, #0a0a2e 50%, #060618 100%)" }}>
+      <div className="sticky top-0 h-[100dvh] w-full overflow-hidden" style={{ background: "linear-gradient(180deg, #06061a 0%, #0a0a2e 50%, #060618 100%)" }}>
 
         {/* 3D Canvas */}
         <div className="absolute inset-0 z-0">
@@ -431,7 +431,7 @@ export default function WebGLGallery({ projects }: { projects: any[] }) {
         </div>
 
         {/* HTML overlay — bottom layout like Noomo */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 px-[5vw] pb-12">
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 px-[5vw] pb-8 lg:pb-12">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeIndex}
@@ -439,7 +439,7 @@ export default function WebGLGallery({ projects }: { projects: any[] }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="flex items-end justify-between gap-12"
+              className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 lg:gap-12"
             >
               {/* Left: Project name, Role + CTA */}
               <div className="flex flex-col gap-3">

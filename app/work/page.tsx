@@ -264,7 +264,6 @@ export default function WorkPage() {
       </header>
 
       <WebGLGallery projects={PROJECTS} />
-      <StackedGrid />
 
       {/* CTA */}
       <section className="mx-auto max-w-7xl px-6 py-24 text-center lg:px-8">
